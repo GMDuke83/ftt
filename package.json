@@ -1,0 +1,15 @@
+{
+  "name": "futures-trade-tracker-render",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Futures Trade Tracker \u2013 Render deployment with Basic Auth",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
