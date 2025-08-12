@@ -1,57 +1,29 @@
-# Futures Trade Tracker – Deployment (GitHub + Render, mit Passwort)
+# Futures Trade Tracker – GitHub (klassisch)
 
-Bewährter Weg, wie man es immer gemacht hat – Schritt für Schritt.
+## Variante A: Nur als Repository (privat, ohne Hosting)
+1. Neues **privates** Repo bei GitHub anlegen (z. B. `ftt-classic`), ohne README/License.
+2. Dateien aus diesem Ordner committen und pushen:
+   ```bash
+   git init
+   git add .
+   git commit -m "Initiale Version"
+   git branch -M main
+   git remote add origin https://github.com/<DEIN_USER>/ftt-classic.git
+   git push -u origin main
+   ```
+3. Zugriff steuerst du über GitHub (Collaborators). **Passwortschutz der Seite** ist hier nicht relevant, da keine Seite öffentlich ausgeliefert wird.
 
-## 1) Repository vorbereiten
+## Variante B: GitHub Pages (statisch, ohne echten Passwortschutz)
+> GitHub Pages bietet keinen serverseitigen Passwortschutz. Für „echte“ Zugangskontrolle nutze vorausschauend einen vorgeschalteten Dienst (z. B. Cloudflare Access) **oder** deploye zu Render/Netlify mit Basic Auth.
+1. Repo (auch privat möglich, dann Pages nur mit Enterprise). Für public:
+2. In den Repo-Settings → **Pages**:
+   - **Source**: `Deploy from a branch`
+   - **Branch**: `main` und Folder: `/ (root)` (weil `index.html` im Root liegt)
+3. Speichern → Deine Seite erscheint unter `https://<DEIN_USER>.github.io/ftt-classic/`.
 
-```bash
-git init ftt-classic && cd ftt-classic
-```
+## Echte Zugangskontrolle (empfohlen)
+- **Empfohlen**: GitHub als Quell-Repo, Deployment zu **Render** (Basic Auth), wie in der Render-Variante beschrieben.
+- Alternativ: GitHub Pages hinter **Cloudflare Access** (SSO/OTP).
 
-Dateien aus diesem Paket in den Ordner kopieren.
-
-```bash
-git add .
-git commit -m "Initiale Version: klassisch mit Basic Auth"
-git branch -M main
-git remote add origin https://github.com/<DEIN_USER>/ftt-classic.git
-git push -u origin main
-```
-
-## 2) Render einrichten
-
-**Variante A – Blueprint (empfohlen, klassisch reproduzierbar):**
-
-1. In Render „New → Blueprint“.
-2. Als Repo `ftt-classic` wählen (enthält `render.yaml`).
-3. Zwei **Environment Variables** setzen:
-   - `BASIC_AUTH_USER` = Dein Benutzername
-   - `BASIC_AUTH_PASS` = Dein Passwort
-4. Deploy starten. URL z. B. `https://ftt-classic.onrender.com`.
-
-**Variante B – Manuell:**
-
-1. In Render „New → Web Service“ → Repository verbinden → Node.
-2. Build Command: `npm install`
-3. Start Command: `node server.js`
-4. Environment:
-   - `BASIC_AUTH_USER` (Secret)
-   - `BASIC_AUTH_PASS` (Secret)
-5. Deploy.
-
-## 3) Lokal testen (optional)
-
-```bash
-npm install
-cp .env.example .env
-# Werte in .env anpassen oder als Umgebungsvariablen setzen
-npm start
-# Aufruf: http://localhost:3000 (Browser fragt nach Benutzer+Passwort)
-```
-
-## Hinweise
-
-- **HTTPS** übernimmt Render automatisch → Basic Auth läuft sicher über TLS.
-- Die Anwendung liefert statische Dateien aus `public/`. Deine `index.html` wurde bereits übernommen.
-- Für spätere Updates: lokal committen & `git push` → Render deployt automatisch.
-- Falls die Seite nur intern genutzt wird, kann man IP-Filter ergänzen oder User/Pass regelmäßig wechseln.
+---
+Hinweis: Die Anwendung ist rein statisch (`index.html`). Keine Build-Tools nötig.
